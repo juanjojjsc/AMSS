@@ -12,16 +12,49 @@
 #include <iomanip>
 using namespace std;
 
-string Clock::getTime() {
+void Clock::getTime() {
     
     
     
     time_t _tm = time(NULL );
-    
+   
     struct tm * curtime = localtime ( &_tm );
-    return asctime(curtime);
+    timeNow = asctime(curtime);
+
     
+   
     
+}
+
+
+void Clock::test() {
+    
+    cout << "test method";
+    
+}
+
+void Clock::printTime() {
+    
+     
+        cout << timeNow;
+
+//        cout << "hola";
+}
+
+
+Clock* Clock::getInstance() {
+    
+    if (instance != 0)
+    {
+        return instance;
+    } else {
+        Clock();
+        return instance;
+    }
     
     
 }
+
+//Inicializar instance
+Clock* Clock::instance = 0;
+

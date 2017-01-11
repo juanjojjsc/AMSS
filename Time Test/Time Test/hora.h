@@ -7,16 +7,34 @@
 //
 
 #include <iostream>
-
+#include <string>
 #pragma once
 
 using namespace std;
 
 class Clock {
     
+private:
+    
+    char* timeNow = "sada";
+    //Constructor privado para que solo haya una instancia
+    Clock(){instance=this;
+            timeNow="ss";}
+    
+    
+    
+    static Clock* instance;
+    
+    
     
 public:
     
-    string getTime();
+    void test();
+    
+    static Clock* getInstance();
+    
+    void getTime();
+    
+    void printTime();
     
 };

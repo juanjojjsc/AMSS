@@ -11,9 +11,14 @@
 
 int main() {
     
-    Clock r1 = Clock();
-    cout << r1.getTime();
     
+    //Queremos que solo haya una instancia en memoria de Clock
+    //Usamos static
+    
+    Clock* r1 = Clock::getInstance();
+    r1->getTime();
+    r1->printTime();
+    r1->test();
     
     return 0;
 }
