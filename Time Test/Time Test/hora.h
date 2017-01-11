@@ -12,7 +12,7 @@
 
 using namespace std;
 
-class Time {
+class Clock {
     
     
 public:

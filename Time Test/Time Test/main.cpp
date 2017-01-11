@@ -11,7 +11,7 @@
 
 int main() {
     
-    Time r1 = Time();
+    Clock r1 = Clock();
     cout << r1.getTime();
     
     

@@ -12,7 +12,7 @@
 #include <iomanip>
 using namespace std;
 
-string Time::getTime() {
+string Clock::getTime() {
     
     
     
