@@ -8,24 +8,24 @@
 
 #include <iostream>
 #include <cctype>
+#include <array>
 
 using namespace std;
 
 
-class ArregloNNP {
+class ArregloNNP;
+
+
+
+class Proxy
+{
     
+private:
+    
+    ArregloNNP& arr;
+    int index;
     
 public:
-    
-    int *arreglo;
-    
-    ArregloNNP(int n) {
-        arreglo = new int[n];
-        for (int i=0; i<n; i++)
-        {
-            arreglo[i] = i + 1;
-        }
-    }
     
     bool NNP(int n) {
         
@@ -43,30 +43,79 @@ public:
         
     }
     
+    Proxy(ArregloNNP& arr, int index) : arr(arr), index(index){}
+    
+    Proxy operator = (int value);
+    friend ostream& operator <<(ostream&, Proxy&&);
+    
     
 };
 
 
+class ArregloNNP {
+    
+private:
+    
+    int *arreglo;
+    int size;
+    
+    
+public:
+    //make friends to access attributes from other classes
+    friend class Proxy;
+    
+    ArregloNNP(int size) : size(size)
+    {
+        arreglo = new int[size+1]; //Reservamos memoria extra
+    }
+    
+    //Sobrecarga de operador
+    Proxy operator [](int index)
+    {
+        if(index<0 || index >= size)
+        {
+            cout << "Error: No hay indices negativos" << endl;
+             return Proxy(*this, size);
+        }
+        return Proxy(*this, index);
+    }
+    friend ostream& operator<<(ostream& os, Proxy&& p);
+    
+    
+    
+    
+};
 
 
+Proxy Proxy::operator=(int value)
+{
+    if (NNP(value)) {
+        arr.arreglo[index] = value;
+        cout << "Si es" << endl;
+    }
+    else
+        cout << "Error: No es numero natural perfecto" << endl;
+    return *this;
+}
 
+
+ostream& operator <<(ostream& os, Proxy&& p)
+{
+    os << p.arr.arreglo[p.index];
+    return os;
+}
 
 int main()
 {
-    int size = 500;
-    int count = 0;
-    ArregloNNP a1(size);
     
-    for (int i=0; i<size; i++)
-    {
-        if (a1.NNP(a1.arreglo[i]) == true)
-            cout << "Si" << endl, count ++;
-        
-        else
-            cout << "Error en numero: " << a1.arreglo[i] << " en subindice: " << i << "." << endl;
-    }
     
-    cout << "Numero total de NNP del 1 al " << size << " : " << count << endl;
+    ArregloNNP a1(1);
+
+    a1[0]=6;
+    a1[5]=2;
+    a1[-1]=5;
+    
+    cout << a1[1];
     
     return 0;
 }
