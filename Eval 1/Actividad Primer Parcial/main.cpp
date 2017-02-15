@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 class Videojuego
@@ -105,19 +106,21 @@ public:
     }
 };
 
-template <class T>
+//template <class T>
 class Almacen {
     
 public:
     
     //Vector
     vector<Videojuego* >* arreglo;
+    vector<Videojuego* >* eliminados;
     
     //Almacen(){}
     
     void crearInventario()
     {
         arreglo = new vector<Videojuego*>();
+        eliminados = new vector<Videojuego*>();
     }
     
     void agregar(Videojuego* v)
@@ -137,6 +140,7 @@ public:
             }
         }
         
+        eliminados->push_back(arreglo->at(index));
         arreglo->erase(arreglo->begin() + index);
         
         cout << "Elemento borrado" << endl;
@@ -145,14 +149,36 @@ public:
     void rehacer()
     {
         
-    }
-    
-    void ordenar()
-    {
+        if (eliminados->size() > 0)
+        {
+            
+            arreglo->push_back(eliminados->back());
+            eliminados->pop_back();
+            
+            cout << "Cambios revertidos" << endl;
+            
+        }
         
     }
     
-    Videojuego* buscar(string nombre)
+    void ordenarMenorAMayor()
+    {
+        
+        sort( arreglo->begin(), arreglo->end( ), [ ](Videojuego* a, Videojuego* b )
+        {
+            return a->precio < b->precio;
+        });
+    }
+    
+    void ordenarMayorAMenor()
+    {
+        sort( arreglo->begin(), arreglo->end( ), [ ](Videojuego* a, Videojuego* b )
+        {
+            return a->precio > b->precio;
+        });
+    }
+    
+    int buscar(string nombre)
     {
         int i;
         //Buscar la posicion del videojuego
@@ -163,10 +189,10 @@ public:
                 
             }
         }
-        return arreglo->at(i);
+        return i;
     }
     
-    Videojuego* buscar(int noserie)
+    int buscar(int noserie)
     {
         int i;
         //Buscar la posicion del videojuego
@@ -177,7 +203,7 @@ public:
                 
             }
         }
-        return arreglo->at(i);
+        return i;
     }
     
     int totalElementos()
@@ -205,42 +231,57 @@ int main() {
     //Estrategia
     Videojuego* ve1 = VideogameFactory::construirVideojuego<Estrategia>("Age of Empires","Microsoft",13366,399,1997);
     Videojuego* ve2 = ve1->clonar();
+    Videojuego* ve3 = VideogameFactory::construirVideojuego<Estrategia>("Fieldrunners","Tech Co",76839,99,2012);
     
-    Almacen<Estrategia>* aes = new Almacen<Estrategia>;
+    Almacen* aes = new Almacen;
     aes->crearInventario();
     aes->agregar(ve1);
     aes->agregar(ve2);
     aes->eliminar(ve2);
-    aes->buscar(13366);
-    aes->buscar("Age of Empires");
+    aes->rehacer();
+    aes->agregar(ve3);
+    aes->ordenarMenorAMayor();
+    aes->ordenarMayorAMenor();
+    cout << "Videojuego encontrado en posicion:" << aes->buscar(13366) << endl;
+    cout << "Videojuego encontrado en posicion:" << aes->buscar("Fieldrunners") << endl;
     cout << "Total de elementos: " << aes->totalElementos() << endl;
     aes->imprimir();
     
     //Aventura
     Videojuego* va1 = VideogameFactory::construirVideojuego<Aventura>("Tomb Raider","Ubisoft",78273,999,2015);
     Videojuego* va2 = va1->clonar();
+    Videojuego* va3 = VideogameFactory::construirVideojuego<Aventura>("Starbound","Enix",49621,299,2014);
     
-    Almacen<Aventura>* aav = new Almacen<Aventura>;
+    Almacen* aav = new Almacen;
     aav->crearInventario();
     aav->agregar(va1);
     aav->agregar(va2);
-    aav->eliminar(ve2);
-    aav->buscar(78273);
-    aav->buscar("Tomb Raider");
+    aav->eliminar(va2);
+    aav->rehacer();
+    aav->agregar(va3);
+    aav->ordenarMenorAMayor();
+    aav->ordenarMayorAMenor();
+    cout << "Videojuego encontrado en posicion:" << aav->buscar(78273) << endl;
+    cout << "Videojuego encontrado en posicion:" << aav->buscar("Starbound") << endl;
     cout << "Total de elementos: " << aav->totalElementos() << endl;
     aav->imprimir();
-    
+
     //Aprendizaje
     Videojuego* vap1 = VideogameFactory::construirVideojuego<Aprendizaje>("Duolingo","Inc",34857,199,2014);
     Videojuego* vap2 = vap1->clonar();
+    Videojuego* vap3 = VideogameFactory::construirVideojuego<Aprendizaje>("Swift Playgrounds","Apple",36594,15,2016);
     
-    Almacen<Aprendizaje>* aap = new Almacen<Aprendizaje>;
+    Almacen* aap = new Almacen;
     aap->crearInventario();
     aap->agregar(vap1);
     aap->agregar(vap2);
-    aap->eliminar(ve2);
-    aap->buscar(34857);
-    aap->buscar("Duolingo");
+    aap->eliminar(vap2);
+    aap->rehacer();
+    aap->agregar(vap3);
+    aap->ordenarMenorAMayor();
+    aap->ordenarMayorAMenor();
+    cout << "Videojuego encontrado en posicion:" << aap->buscar(36594) << endl;
+    cout << "Videojuego encontrado en posicion:" << aap->buscar("Duolingo") << endl;
     cout << "Total de elementos: " << aap->totalElementos() << endl;
     aap->imprimir();
     
